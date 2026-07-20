@@ -1,0 +1,146 @@
+[
+  {
+    "id": "tool_json_extract",
+    "category": "Tool Use",
+    "points": 75,
+    "prompt": "Extract the following information into a JSON object with keys 'name', 'city', and 'age': 'Alice is a 25 year old software engineer living in Seattle.'",
+    "system_prompt": "You are a helpful assistant that always outputs valid JSON.",
+    "evaluator": "json_schema",
+    "expected": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string", "const": "Alice"},
+        "city": {"type": "string", "const": "Seattle"},
+        "age": {"type": "integer", "const": 25}
+      },
+      "required": ["name", "city", "age"]
+    }
+  },
+  {
+    "id": "tool_api_call",
+    "category": "Tool Use",
+    "points": 100,
+    "prompt": "Call the function get_weather(city: string, unit: 'C'|'F') for London in Celsius. Output only the JSON tool call.",
+    "system_prompt": "You are a tool-calling agent. Respond only with the JSON object representing the tool call.",
+    "evaluator": "json_schema",
+    "expected": {
+      "type": "object",
+      "properties": {
+        "function": {"type": "string", "const": "get_weather"},
+        "arguments": {
+          "type": "object",
+          "properties": {
+            "city": {"type": "string", "const": "London"},
+            "unit": {"type": "string", "const": "C"}
+          },
+          "required": ["city", "unit"]
+        }
+      },
+      "required": ["function", "arguments"]
+    }
+  },
+  {
+    "id": "tool_missing_info",
+    "category": "Tool Use",
+    "points": 60,
+    "prompt": "I want to book a flight to Tokyo. Please use the book_flight(destination: string, date: string) tool.",
+    "system_prompt": "You are a travel assistant. If information is missing for a tool call, you MUST ask the user for it instead of making it up.",
+    "evaluator": "regex",
+    "expected": "(?i)(date|when|what day)"
+  },
+  {
+    "id": "tool_complex_schema",
+    "category": "Tool Use",
+    "points": 65,
+    "prompt": "Create a JSON representation of a user profile with 'username', 'contact' (object containing 'email' and 'phone'), and 'preferences' (array of strings). Use the name 'dev_user'.",
+    "system_prompt": "Output only valid JSON.",
+    "evaluator": "json_schema",
+    "expected": {
+      "type": "object",
+      "properties": {
+        "username": {"type": "string"},
+        "contact": {
+          "type": "object",
+          "properties": {
+            "email": {"type": "string"},
+            "phone": {"type": "string"}
+          }
+        },
+        "preferences": {"type": "array", "items": {"type": "string"}}
+      },
+      "required": ["username", "contact", "preferences"]
+    }
+  },
+  {
+    "id": "code_lru_cache",
+    "category": "Coding Knowledge",
+    "points": 100,
+    "prompt": "Implement a simple LRU (Least Recently Used) Cache class in Python with get and put methods. The cache should have a fixed capacity.",
+    "system_prompt": "Write professional, clean Python code.",
+    "evaluator": "unit_test",
+    "expected": "lru_cache_test.py"
+  },
+  {
+    "id": "code_rust_idiom",
+    "category": "Coding Knowledge",
+    "points": 100,
+    "prompt": "In Rust, write a function that takes an Option<String> and returns the string if it exists, otherwise returning a default value 'Empty'. Use the most idiomatic method (e.g., unwrap_or).",
+    "system_prompt": "Output only the code.",
+    "evaluator": "regex",
+    "expected": "unwrap_or"
+  },
+  {
+    "id": "code_bug_fix",
+    "category": "Coding Knowledge",
+    "points": 100,
+    "prompt": "The following Python function is intended to find the maximum element in a list but has a bug. Fix it: \\n\\ndef find_max(nums):\\n    max_val = 0\\n    for n in nums:\\n        if n > max_val:\\n            max_val = n\\n    return max_val",
+    "system_prompt": "Fix the bug and output only the corrected code.",
+    "evaluator": "unit_test",
+    "expected": "bug_fix_test.py"
+  },
+  {
+    "id": "instr_negative_constraint",
+    "category": "Instruction Following",
+    "points": 50,
+    "prompt": "Write a Python function to calculate the sum of a list of numbers without using the built-in sum() function or any imports.",
+    "system_prompt": "Strictly follow constraints.",
+    "evaluator": "regex",
+    "expected": "^((?!sum\\(|import).)*$"
+  },
+  {
+    "id": "instr_strict_format",
+    "category": "Instruction Following",
+    "points": 75,
+    "prompt": "What is the capital of France? Output ONLY the city name. No sentence, no punctuation, no markdown.",
+    "system_prompt": "Be concise.",
+    "evaluator": "regex",
+    "expected": "^Paris$"
+  },
+  {
+    "id": "instr_multi_step",
+    "category": "Instruction Following",
+    "points": 75,
+    "prompt": "1. Set a variable x to 10. 2. Add 5 to it. 3. Multiply by 2. Output the final result as a single number.",
+    "system_prompt": "Follow steps exactly.",
+    "evaluator": "regex",
+    "expected": "^30$"
+  },
+  {
+    "id": "refactor_complexity",
+    "category": "Refactoring",
+    "points": 100,
+    "prompt": "The following function is O(n^2). Refactor it to be more efficient (O(n) or O(n log n)): \\n\\ndef find_duplicates(nums):\\n    dups = []\\n    for i in range(len(nums)):\\n        for j in range(i + 1, len(nums)):\\n            if nums[i] == nums[j] and nums[i] not in dups:\\n                dups.append(nums[i])\\n    return dups",
+    "system_prompt": "Optimize for time complexity.",
+    "evaluator": "unit_test",
+    "expected": "refactor_complexity_test.py"
+  },
+  {
+    "id": "refactor_cleanliness",
+    "category": "Refactoring",
+    "points": 100,
+    "prompt": "Refactor this code into a class with proper methods: \\n\\ndef process(data):\\n    res = []\\n    for x in data:\\n        if x % 2 == 0:\\n            res.append(x * 2)\\n    return res",
+    "system_prompt": "Improve modularity and cleanliness.",
+    "evaluator": "regex",
+    "expected": "class .*:.*def"
+  }
+]
