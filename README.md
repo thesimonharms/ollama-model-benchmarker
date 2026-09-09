@@ -1,3 +1,7 @@
+> **Moved.** This GitHub copy is an archive. Use the Forgejo repository.
+>
+> **Canonical repository:** https://git.simonharms.com/thesimonharms/ollama-model-benchmarker
+
 # Ollama Code Benchmarker
 
 Ollama Code Benchmarker is a tool designed to evaluate the coding capabilities of Large Language Models (LLMs) served via [Ollama](https://ollama.com/).
